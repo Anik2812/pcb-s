@@ -1,0 +1,54 @@
+// pir sensor 
+int ledPin = 13;
+  int sensorPin = 2;
+  int sensorState = LOW;
+  int sensorValue = 0;
+
+
+  void setup() {
+    pinMode(ledPin, OUTPUT);
+    pinMode(sensorPin, INPUT);
+    Serial.begin(9600);
+  }
+
+
+  void loop(){
+    sensorValue = digitalRead(sensorPin);
+    if (sensorValue == HIGH) {
+      digitalWrite(ledPin, HIGH);
+      delay(100);
+   
+    if (sensorState == LOW) {
+      Serial.println("Motion detected!");
+      sensorState = HIGH;
+    }
+  }
+  else {
+      digitalWrite(ledPin, LOW);
+      delay(200);
+     
+      if (sensorState == HIGH){
+        Serial.println("Motion stopped!");
+        sensorState = LOW;
+    }
+  }
+}
+
+
+
+
+// led blinker
+ORG 0000H
+  RETURN: MOV P2,#00H
+  ACALL DELAY
+  MOV P2, #0FFH
+  ACALL DELAY
+  SJMP RETURN
+  DELAY:   MOV R5, #50H      //load register R5 with 50//
+  DELAY1: MOV R6, #100    //load register R6 with 100//
+  DELAY2: MOV R7, #100   //load register R7 with 100//
+  DJNZ R7, $    //decrement R7 till it is zero//
+  DJNZ R6, DELAY2//decrement R6 till it is zero//
+  DJNZ R5, DELAY1//decrement R5 till it is zero//
+  RET            //go back to the main program //
+  END
